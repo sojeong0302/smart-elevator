@@ -1,10 +1,36 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
+
+const exitLeft = keyframes`
+  0% {
+    transform: translate(0, 0) scale(0.9);
+    opacity: 1;
+  }
+
+  25% {
+    transform: translate(0, 70px) scale(2); /* 앞으로 오며 살짝 커짐 */
+  }
+
+  45% {
+    transform: translate(-20px, 75px) scale(2);
+  }
+
+  70% {
+    transform: translate(-80px, 55px) scale(1.7);
+  }
+
+  100% {
+    transform: translate(-150px, 50px) scale(1.5);
+    opacity: 0;
+  }
+`;
 
 export const Container = styled.div`
     margin-top: 20px;
     padding: 20px;
     background: #f2f2f2;
     border-radius: 12px;
+    width: 100%;
+    height: 100vh;
 `;
 
 export const Title = styled.h2`
@@ -13,13 +39,13 @@ export const Title = styled.h2`
 `;
 
 export const HumanImage = styled.img`
-    width: 80px;
+    width: 110px; /* ✅ 80 → 110 */
 `;
 
 export const SpeechBubble = styled.div`
     position: absolute;
-    top: -40px;
-    left: 60px;
+    top: -55px; /* ✅ 위로 조금 더 */
+    left: 80px;
     background: white;
     padding: 10px 14px;
     border-radius: 12px;
@@ -39,23 +65,23 @@ export const SpeechBubble = styled.div`
 
 export const WaitingArea = styled.div`
     position: relative;
-    height: 260px;
+    height: 320px; /* ✅ 260 → 320 */
     background: #dcdcdc;
-    border-radius: 10px;
+    border-radius: 14px;
     overflow: hidden;
 `;
 
 /* 엘리베이터 문 */
 export const ElevatorDoor = styled.div`
     position: absolute;
-    top: 40px;
+    top: 50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 180px;
-    height: 150px;
+    width: 240px; /* ✅ 180 → 240 */
+    height: 190px; /* ✅ 150 → 190 */
     display: flex;
     overflow: hidden;
-    border: 4px solid #555;
+    border: 5px solid #555;
     background: #777;
 `;
 
@@ -83,21 +109,28 @@ export const PersonGroup = styled.div`
 `;
 export const InsidePeople = styled.div`
     position: absolute;
-    top: 55px;
+    top: 65px;
     left: 50%;
     transform: translateX(-50%);
-    width: 140px;
-    height: 110px;
+    width: 190px; /* ✅ 140 → 190 */
+    height: 140px; /* ✅ 110 → 140 */
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
+    gap: 6px;
     opacity: ${({ $show }) => ($show ? 1 : 0)};
     transition: opacity 0.8s ease;
     z-index: 1;
 `;
 
 export const InsideHuman = styled.img`
-    width: 30px;
+    width: 40px;
+
+    ${({ $exit, $delay }) =>
+        $exit &&
+        css`
+            animation: ${exitLeft} 3.5s ease-in-out forwards;
+            animation-delay: ${$delay};
+        `}
 `;
 
 export const FloorDisplay = styled.div`
@@ -161,15 +194,17 @@ export const Arrow = styled.span`
 
 export const SidePanel = styled.div`
     position: absolute;
-    left: calc(50% + 110px); /* 엘리베이터 바로 옆 */
-    top: 70px;
+    top: 90px; /* ✅ 문 중간 기준으로 내려줌 */
+    left: calc(50% + 140px); /* ✅ 문 오른쪽에 붙게 */
+
     background: #555;
-    border-radius: 10px;
-    padding: 15px 10px;
+    border-radius: 14px;
+    padding: 18px 12px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+    gap: 14px;
+
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6), 0 4px 8px rgba(0, 0, 0, 0.4);
 `;
 
 /* 버튼 */

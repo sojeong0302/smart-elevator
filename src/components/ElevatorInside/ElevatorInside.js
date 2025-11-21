@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Title, Panel, Display, ButtonGrid, FloorButton, ControlButton } from "./ElevatorInside.style.js";
+import { Container, Panel, Display, ButtonGrid, FloorButton, ControlButton } from "./ElevatorInside.style.js";
 
 function ElevatorInside({ onSelectFloor }) {
     const [activeFloor, setActiveFloor] = useState(null);
@@ -11,13 +11,14 @@ function ElevatorInside({ onSelectFloor }) {
 
     return (
         <Container>
-            <Title>엘리베이터 내부</Title>
-
             <Panel>
-                <Display>현재 위치 : 3층</Display>
+                <Display>
+                    <span className="arrow">▼</span>
+                    <span className="floor">8</span>
+                </Display>
 
                 <ButtonGrid>
-                    {[7, 6, 5, 4, 3, 2, 1, 0].map((floor) => (
+                    {[7, 8, 5, 6, 3, 4, 1, 2].map((floor) => (
                         <FloorButton key={floor} $active={activeFloor === floor} onClick={() => handleClick(floor)}>
                             {floor}
                         </FloorButton>

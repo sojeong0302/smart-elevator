@@ -137,18 +137,20 @@ export const InsidePeople = styled.div`
     position: absolute;
     top: 65px;
     left: 50%;
-    transform: ${({ $show }) => ($show ? "translate(-50%, 0)" : "translate(-50%, 10px)")};
-
+    transform: translateX(-50%);
     width: 190px;
     height: 140px;
-
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
+    z-index: 10;
+    overflow: visible;
 
-    opacity: ${({ $show }) => ($show ? 1 : 0)};
-    transition: all 0.8s ease;
-    z-index: 1;
+    opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+    transform: ${({ $visible }) => ($visible ? "translateX(-50%) scale(1)" : "translateX(-50%) scale(0.95)")};
+
+    pointer-events: none;
+    transition: opacity 0.6s ease, transform 0.6s ease;
 `;
 
 export const InsideHuman = styled.img`
@@ -167,7 +169,7 @@ export const FloorDisplay = styled.div`
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 160px;
+    width: 200px;
     height: 40px;
     background: #0f0f0f;
     color: #ff3b3b;
@@ -304,4 +306,10 @@ export const LedSensor = styled.div`
         transition: opacity 0.8s ease;
         pointer-events: none;
     }
+`;
+
+export const LedRightWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
 `;

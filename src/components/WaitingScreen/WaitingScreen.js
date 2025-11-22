@@ -19,6 +19,7 @@ import {
     SidePanel,
     SideButton,
     LedSensor,
+    LedRightWrapper,
 } from "./WaitingScreen.style";
 
 function WaitingScreen({ floor }) {
@@ -29,10 +30,11 @@ function WaitingScreen({ floor }) {
     const [ledOn, setLedOn] = useState(false);
     const [doorOpen, setDoorOpen] = useState(false);
     const [arrived, setArrived] = useState(false);
+    const [waitingCount, setWaitingCount] = useState(0);
 
     useEffect(() => {
         if (floor !== null) {
-            let start = floor + 2;
+            let start = floor + 5;
             setDisplayFloor(start);
             setArrived(false);
             setMoveBack(false);
@@ -44,17 +46,16 @@ function WaitingScreen({ floor }) {
                 start -= 1;
                 setDisplayFloor(start);
 
+                // ✅ 층 변경될 때마다 대기 인원 랜덤 변경
+                setWaitingCount(Math.floor(Math.random() * 14) + 1);
+
                 if (start === floor + 1) {
                     setLedOn(true);
-                    setMoveBack(true);
                 }
 
                 if (start === floor) {
                     clearInterval(interval);
-                    setArrived(true); // ✅ 도착
-                    setTimeout(() => {
-                        setExitMove(true);
-                    }, 900);
+                    setArrived(true);
                 }
             }, 900);
 
@@ -63,11 +64,39 @@ function WaitingScreen({ floor }) {
     }, [floor]);
 
     useEffect(() => {
-        if (arrived) {
+        if (doorOpen) {
             const timer = setTimeout(() => {
-                setDoorOpen(true);
-            }, 1000);
+                setExitMove(true);
+            }, 400);
+
             return () => clearTimeout(timer);
+        }
+    }, [doorOpen]);
+
+    const speak = (text) => {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = "ko-KR";
+        msg.rate = 1;
+        msg.pitch = 1;
+
+        // ✅ 음성 시작할 때 뒤로 물러나게
+        msg.onstart = () => {
+            setMoveBack(true);
+            setLedOn(true);
+        };
+
+        // ✅ 음성 끝난 후 문 열기
+        msg.onend = () => {
+            setDoorOpen(true);
+        };
+
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(msg);
+    };
+
+    useEffect(() => {
+        if (arrived) {
+            speak("내리실 승객이 먼저 하차합니다. 뒤로 물러나 주세요.");
         }
     }, [arrived]);
 
@@ -78,11 +107,16 @@ function WaitingScreen({ floor }) {
             <WaitingArea>
                 <FloorDisplay>
                     <LedLeft>
-                        <Arrow>↓</Arrow>
+                        <span style={{ fontSize: "13px", marginRight: "6px" }}>15/{waitingCount}</span>
                         {displayFloor !== null ? `${displayFloor}F` : "--"}
                     </LedLeft>
+
                     <Divider />
-                    {floor !== null && !arrived && <LedRight>하차 예정</LedRight>}
+
+                    <LedRightWrapper>
+                        {floor !== null && <LedRight>하차 예정</LedRight>}
+                        <LedSensor $on={ledOn} />
+                    </LedRightWrapper>
                 </FloorDisplay>
 
                 <div style={{ position: "relative", width: "fit-content", margin: "0 auto" }}>
@@ -93,12 +127,12 @@ function WaitingScreen({ floor }) {
                     <SidePanel>
                         <SideButton>▲</SideButton>
                         <SideButton>▼</SideButton>
-                        <LedSensor $on={ledOn} />
+                        {/* <LedSensor $on={ledOn} /> */}
                     </SidePanel>
                 </div>
 
                 {/* 내부 사람들 */}
-                <InsidePeople $show={doorOpen}>
+                <InsidePeople $visible={doorOpen}>
                     {[...Array(12)].map((_, i) => (
                         <InsideHuman
                             key={`${cycle}-${i}`}

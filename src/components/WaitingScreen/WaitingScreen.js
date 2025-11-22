@@ -46,8 +46,7 @@ function WaitingScreen({ floor }) {
                 start -= 1;
                 setDisplayFloor(start);
 
-                // ✅ 층 변경될 때마다 대기 인원 랜덤 변경
-                setWaitingCount(Math.floor(Math.random() * 14) + 1);
+                setWaitingCount(Math.floor(Math.random() * 6) + 10);
 
                 if (start === floor + 1) {
                     setLedOn(true);
@@ -56,6 +55,7 @@ function WaitingScreen({ floor }) {
                 if (start === floor) {
                     clearInterval(interval);
                     setArrived(true);
+                    setWaitingCount(12);
                 }
             }, 900);
 
@@ -80,9 +80,18 @@ function WaitingScreen({ floor }) {
         msg.pitch = 1;
 
         // ✅ 음성 시작할 때 뒤로 물러나게
+        // ✅ 음성 시작할 때 뒤로 물러나게 + LED 깜빡
         msg.onstart = () => {
             setMoveBack(true);
-            setLedOn(true);
+
+            setLedOn(true); // 켜짐
+            setTimeout(() => {
+                setLedOn(false); // 꺼짐
+            }, 300);
+
+            setTimeout(() => {
+                setLedOn(true); // 다시 켜짐 (유지)
+            }, 600);
         };
 
         // ✅ 음성 끝난 후 문 열기

@@ -8,6 +8,7 @@ export const Container = styled.div`
     justify-content: center;
     align-items: center;
     height: 100vh;
+    flex-direction: column;
 `;
 
 export const Panel = styled.div`
@@ -15,6 +16,10 @@ export const Panel = styled.div`
     padding: 30px 20px;
     border-radius: 8px;
     width: 300px;
+`;
+export const Title = styled.h2`
+    text-align: center;
+    margin-bottom: 15px;
 `;
 
 /* LCD 층 표시 */

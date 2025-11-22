@@ -78,9 +78,6 @@ function WaitingScreen({ floor }) {
         msg.lang = "ko-KR";
         msg.rate = 1;
         msg.pitch = 1;
-
-        // ✅ 음성 시작할 때 뒤로 물러나게
-        // ✅ 음성 시작할 때 뒤로 물러나게 + LED 깜빡
         msg.onstart = () => {
             setMoveBack(true);
 

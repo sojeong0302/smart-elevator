@@ -57,6 +57,8 @@ export const Container = styled.div`
     border-radius: 12px;
     width: 100%;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 `;
 
 export const Title = styled.h2`
@@ -103,8 +105,8 @@ export const ElevatorDoor = styled.div`
     top: 50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 240px; /* ✅ 180 → 240 */
-    height: 190px; /* ✅ 150 → 190 */
+    width: 300px; /* ✅ 180 → 240 */
+    height: 200px; /* ✅ 150 → 190 */
     display: flex;
     overflow: hidden;
     border: 5px solid #555;
@@ -138,8 +140,8 @@ export const InsidePeople = styled.div`
     top: 65px;
     left: 50%;
     transform: translateX(-50%);
-    width: 190px;
-    height: 140px;
+    width: 200px;
+    height: 150px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
@@ -226,7 +228,7 @@ export const Arrow = styled.span`
 export const SidePanel = styled.div`
     position: absolute;
     top: 90px; /* ✅ 문 중간 기준으로 내려줌 */
-    left: calc(50% + 140px); /* ✅ 문 오른쪽에 붙게 */
+    left: calc(50% + 170px); /* ✅ 문 오른쪽에 붙게 */
 
     background: #555;
     border-radius: 14px;
@@ -283,10 +285,10 @@ export const LedSensor = styled.div`
     box-shadow: ${({ $on }) =>
         $on
             ? `
-      0 0 40px rgba(255, 0, 0, 0.9),
-      0 0 120px rgba(255, 0, 0, 0.8),
-      0 0 260px rgba(255, 0, 0, 0.7),
-      0 0 420px rgba(255, 0, 0, 0.6)
+      0 0 70px rgba(255, 0, 0, 0.9),
+      0 0 180px rgba(255, 0, 0, 0.8),
+      0 0 420px rgba(255, 0, 0, 0.7),
+      0 0 700px rgba(255, 0, 0, 0.6)
     `
             : "none"};
 
@@ -298,8 +300,8 @@ export const LedSensor = styled.div`
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 240px;
-        height: 240px;
+        width: 340px;
+        height: 340px;
         transform: translate(-50%, -50%);
         background: radial-gradient(circle, rgba(255, 0, 0, 0.5), transparent 70%);
         opacity: ${({ $on }) => ($on ? 1 : 0)};

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Panel, Display, ButtonGrid, FloorButton, ControlButton } from "./ElevatorInside.style.js";
+import { Container, Title, Panel, Display, ButtonGrid, FloorButton, ControlButton } from "./ElevatorInside.style.js";
 
 function ElevatorInside({ onSelectFloor }) {
     const [activeFloor, setActiveFloor] = useState(null);
@@ -11,6 +11,7 @@ function ElevatorInside({ onSelectFloor }) {
 
     return (
         <Container>
+            <Title>엘레베이터 내부</Title>
             <Panel>
                 <Display>
                     <span className="arrow">▼</span>

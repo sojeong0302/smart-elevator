@@ -5,6 +5,7 @@ import { useState } from "react";
 
 const MainPage = () => {
     const [targetFloor, setTargetFloor] = useState(null);
+
     return (
         <MainContainer>
             <ElevatorInside onSelectFloor={setTargetFloor} />

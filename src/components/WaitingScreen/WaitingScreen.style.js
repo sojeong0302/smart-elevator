@@ -24,6 +24,32 @@ const exitLeft = keyframes`
   }
 `;
 
+const glow = keyframes`
+  0% {
+    box-shadow:
+      0 0 30px rgba(255, 60, 60, 0.8),
+      0 0 80px rgba(255, 40, 40, 0.7),
+      0 0 160px rgba(255, 30, 30, 0.6),
+      0 0 260px rgba(255, 20, 20, 0.4);
+  }
+
+  50% {
+    box-shadow:
+      0 0 70px rgba(255, 0, 0, 1),
+      0 0 180px rgba(255, 0, 0, 1),
+      0 0 360px rgba(255, 0, 0, 0.9),
+      0 0 550px rgba(255, 0, 0, 0.85);
+  }
+
+  100% {
+    box-shadow:
+      0 0 40px rgba(255, 50, 50, 0.8),
+      0 0 130px rgba(255, 30, 30, 0.7),
+      0 0 260px rgba(255, 20, 20, 0.6),
+      0 0 420px rgba(255, 10, 10, 0.5);
+  }
+`;
+
 export const Container = styled.div`
     margin-top: 20px;
     padding: 20px;
@@ -39,7 +65,7 @@ export const Title = styled.h2`
 `;
 
 export const HumanImage = styled.img`
-    width: 110px; /* ✅ 80 → 110 */
+    width: 110px;
 `;
 
 export const SpeechBubble = styled.div`
@@ -111,14 +137,17 @@ export const InsidePeople = styled.div`
     position: absolute;
     top: 65px;
     left: 50%;
-    transform: translateX(-50%);
-    width: 190px; /* ✅ 140 → 190 */
-    height: 140px; /* ✅ 110 → 140 */
+    transform: ${({ $show }) => ($show ? "translate(-50%, 0)" : "translate(-50%, 10px)")};
+
+    width: 190px;
+    height: 140px;
+
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
+
     opacity: ${({ $show }) => ($show ? 1 : 0)};
-    transition: opacity 0.8s ease;
+    transition: all 0.8s ease;
     z-index: 1;
 `;
 
@@ -232,5 +261,47 @@ export const SideButton = styled.button`
     &:active {
         transform: scale(0.95);
         box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.6);
+    }
+`;
+
+export const LedSensor = styled.div`
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: ${({ $on }) => ($on ? "#ff1c1c" : "#330000")};
+
+    opacity: ${({ $on }) => ($on ? 1 : 0.2)};
+    filter: ${({ $on }) => ($on ? "blur(1px)" : "none")};
+
+    box-shadow: ${({ $on }) =>
+        $on
+            ? `
+      0 0 40px rgba(255, 0, 0, 0.9),
+      0 0 120px rgba(255, 0, 0, 0.8),
+      0 0 260px rgba(255, 0, 0, 0.7),
+      0 0 420px rgba(255, 0, 0, 0.6)
+    `
+            : "none"};
+
+    transition: all 0.8s ease;
+    animation: ${({ $on }) => ($on ? glow : "none")} 1.3s ease-in-out infinite;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 240px;
+        height: 240px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, rgba(255, 0, 0, 0.5), transparent 70%);
+        opacity: ${({ $on }) => ($on ? 1 : 0)};
+        transition: opacity 0.8s ease;
+        pointer-events: none;
     }
 `;

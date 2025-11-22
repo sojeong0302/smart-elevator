@@ -18,34 +18,58 @@ import {
     Arrow,
     SidePanel,
     SideButton,
+    LedSensor,
 } from "./WaitingScreen.style";
 
 function WaitingScreen({ floor }) {
     const [moveBack, setMoveBack] = useState(false);
     const [exitMove, setExitMove] = useState(false);
     const [cycle, setCycle] = useState(0);
+    const [displayFloor, setDisplayFloor] = useState(null);
+    const [ledOn, setLedOn] = useState(false);
+    const [doorOpen, setDoorOpen] = useState(false);
+    const [arrived, setArrived] = useState(false);
 
     useEffect(() => {
         if (floor !== null) {
-            // ✅ 초기화
+            let start = floor + 2;
+            setDisplayFloor(start);
+            setArrived(false);
             setMoveBack(false);
+            setLedOn(false);
             setExitMove(false);
+            setDoorOpen(false);
 
-            const resetTimer = setTimeout(() => {
-                setCycle((prev) => prev + 1);
-                setMoveBack(true); // 문 열림
-            }, 300);
+            const interval = setInterval(() => {
+                start -= 1;
+                setDisplayFloor(start);
 
-            const exitTimer = setTimeout(() => {
-                setExitMove(true); // 사람 내려감
-            }, 1300);
+                if (start === floor + 1) {
+                    setLedOn(true);
+                    setMoveBack(true);
+                }
 
-            return () => {
-                clearTimeout(resetTimer);
-                clearTimeout(exitTimer);
-            };
+                if (start === floor) {
+                    clearInterval(interval);
+                    setArrived(true); // ✅ 도착
+                    setTimeout(() => {
+                        setExitMove(true);
+                    }, 900);
+                }
+            }, 900);
+
+            return () => clearInterval(interval);
         }
     }, [floor]);
+
+    useEffect(() => {
+        if (arrived) {
+            const timer = setTimeout(() => {
+                setDoorOpen(true);
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [arrived]);
 
     return (
         <Container>
@@ -55,26 +79,26 @@ function WaitingScreen({ floor }) {
                 <FloorDisplay>
                     <LedLeft>
                         <Arrow>↓</Arrow>
-                        {floor !== null ? `${floor}F` : "--"}
+                        {displayFloor !== null ? `${displayFloor}F` : "--"}
                     </LedLeft>
                     <Divider />
-                    {floor !== null && <LedRight>하차 예정</LedRight>}
+                    {floor !== null && !arrived && <LedRight>하차 예정</LedRight>}
                 </FloorDisplay>
 
                 <div style={{ position: "relative", width: "fit-content", margin: "0 auto" }}>
                     <ElevatorDoor>
-                        <LeftDoor $open={moveBack} />
-                        <RightDoor $open={moveBack} />
+                        <LeftDoor $open={doorOpen} />
+                        <RightDoor $open={doorOpen} />
                     </ElevatorDoor>
-
                     <SidePanel>
                         <SideButton>▲</SideButton>
                         <SideButton>▼</SideButton>
+                        <LedSensor $on={ledOn} />
                     </SidePanel>
                 </div>
 
                 {/* 내부 사람들 */}
-                <InsidePeople $show={moveBack}>
+                <InsidePeople $show={doorOpen}>
                     {[...Array(12)].map((_, i) => (
                         <InsideHuman
                             key={`${cycle}-${i}`}
@@ -89,7 +113,6 @@ function WaitingScreen({ floor }) {
                 {/* 바깥 대기자 */}
                 <PersonGroup $moveBack={moveBack}>
                     <HumanImage src="/human.png" alt="person" />
-                    {floor !== null && <SpeechBubble>곧 사람이 내리겠네! 조금 뒤로 가야겠다...</SpeechBubble>}
                 </PersonGroup>
             </WaitingArea>
         </Container>
